@@ -8,6 +8,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.constants import END
 from langgraph.graph import MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode
+from pyexpat.errors import messages
 
 
 # 定义函数工具，代理调用外部
@@ -61,10 +62,18 @@ graph = builder.compile(checkpointer=checkpointer)
 
 while True:
     user_input = input("User input:")
-    if user_input == "exit":
-        break
-    for event in graph.stream({"messages": [HumanMessage(content=user_input)]},
-                              config={"configurable": {"thread_id": 1}}, stream_mode="values"):
+    if "exit" in user_input:
+        # human-in-the-loop，消息调用传入None即可
+        result = input("是否退出？(y/n)")
+        if result == "y":
+            break
+        for event in graph.stream(None, config={"configurable": {"thread_id": 1}}, stream_mode="values"):
+            event["messages"][-1].pretty_print()
+
+    for event in graph.stream(
+        {"messages": [HumanMessage(content=user_input)]},
+        config={"configurable": {"thread_id": 1}},
+        stream_mode="values"):
         event["messages"][-1].pretty_print()
 
 # response = graph.invoke({"messages": [HumanMessage(content="今天深圳天气如何")]}, config={"configurable": {"thread_id": 1}})
