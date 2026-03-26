@@ -8,7 +8,6 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.constants import END
 from langgraph.graph import MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode
-from pyexpat.errors import messages
 
 
 # 定义函数工具，代理调用外部
@@ -26,7 +25,7 @@ tools = [search]
 tool_node = ToolNode(tools)
 
 # 1. 初始化模型和工具，定义并绑定工具到模型
-model = ChatOpenAI(base_url="https://open.bigmodel.cn/api/paas/v4/", api_key=os.getenv("ZAI_API_KEY"),
+model = ChatOpenAI(base_url="https://open.bigmodel.cn/api/paas/v4/", api_key=os.getenv("GLM_API_KEY"),
                    model="glm-4.7", temperature=0).bind_tools(tools)
 
 # 定义函数，决定是否执行
