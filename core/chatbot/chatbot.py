@@ -82,5 +82,5 @@ while True:
 # print(f"response: {response["messages"][-1].content}")
 # 生成图
 graph_png = graph.get_graph().draw_mermaid_png()
-with open("langgraph_hello.png", "wb") as fh:
+with open("../langgraph_hello.png", "wb") as fh:
     fh.write(graph_png)
