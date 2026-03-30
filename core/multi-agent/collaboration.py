@@ -27,7 +27,7 @@ class AgentState(TypedDict):
     # sender 用于存储当前消息的发送者，指导当前消息是由哪个代理生成的
     sender: str
 
-def agent_node(state: AgentState, agent: BaseChatModel, name: str) -> AgentState:
+def agent_node(state: AgentState, agent, name: str) -> AgentState:
     # 调用代理
     result = agent.invoke(state)
     # 若非ToolMessage类型（即Tavily搜索出来的结果，需要大模型处理数据）
@@ -99,14 +99,14 @@ builder.add_conditional_edges(
 builder.add_conditional_edges(
     "call_tool",
     lambda x: x["sender"],
-#     TODO {"researcher": "researcher", "draw_chart": "draw_chart"}
+    {"researcher": "researcher", "draw_chart": "draw_chart"}
 )
 
 graph = builder.compile()
 
-graph_png = graph.get_graph().draw_mermaid_png()
-with open("collaboration.png", "wb") as fh:
-    fh.write(graph_png)
+# graph_png = graph.get_graph().draw_mermaid_png()
+# with open("collaboration.png", "wb") as fh:
+#     fh.write(graph_png)
 
 events = graph.stream(
     {
